@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">sushi</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Menu</string>
+    <string name="menu_gallery">Profile</string>
+    <string name="menu_order">Order</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="msg_your_address_updated_successfully">Your address was updated successfully.</string>
+    <string name="error_message_address_deleted_successfully">Address was deleted successfully.</string>
+    <string name="address_added_success_msg">Address was added successfully</string>
+
+</resources>

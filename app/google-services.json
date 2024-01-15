@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "215122987339",
+    "project_id": "sushi-b50b2",
+    "storage_bucket": "sushi-b50b2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:215122987339:android:4e5facc59edcaaf94b00ce",
+        "android_client_info": {
+          "package_name": "com.example.sushi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5aZ-k3CjggRt59GNEUY4xJvzolte3N8c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

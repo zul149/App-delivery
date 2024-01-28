@@ -1,6 +1,7 @@
 package com.example.sushi
 
 import android.app.AlertDialog
+import android.app.TimePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,6 +14,8 @@ import com.example.sushi.data.productData
 import com.example.sushi.databinding.ActivityShoppingBagBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Calendar
 
 
 class ShoppingBagActivity : AppCompatActivity() {
@@ -21,6 +24,7 @@ class ShoppingBagActivity : AppCompatActivity() {
     private lateinit var ProductList: ArrayList<productData>
     private lateinit var CartListItem: ArrayList<CartItem>
     private var total = 0
+    private var timeDelivery: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +32,37 @@ class ShoppingBagActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnCheckout.setOnClickListener{
-            val intent = Intent(this@ShoppingBagActivity,MyAddressActivity::class.java)
+
+            val items = CartListItem.size
+            for (i in CartListItem) {
+                FB().removeItemFromCart(this, i.product_id)
+            }
+
+            if (timeDelivery == "") {
+                Toast.makeText(this,"выберите время доставки", Toast.LENGTH_SHORT).show()
+            } else {
+                val intent = Intent(this@ShoppingBagActivity, MyAddressActivity::class.java)
                 intent.putExtra("total", total.toString())
-            startActivity(intent)
+                intent.putExtra("timeDelivery", timeDelivery)
+                startActivity(intent)
+            }
         }
 
         setupActionBar()
 
 //        getCartItemList()
+
+        binding.btnTime.setOnClickListener{// календарь
+            val cal = Calendar.getInstance()
+            val timeSetListener = TimePickerDialog.OnTimeSetListener { timePicker, hour, minute ->
+                cal.set(Calendar.HOUR_OF_DAY, hour)
+                cal.set(Calendar.MINUTE, minute)
+                binding.txtTime.text = SimpleDateFormat("HH:mm").format(cal.time)
+                timeDelivery = SimpleDateFormat("HH:mm").format(cal.time).toString()
+            }
+            TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true)
+                .show()
+        }
     }
 
 
@@ -87,6 +114,8 @@ class ShoppingBagActivity : AppCompatActivity() {
         if (CartListItem.size >0){
             binding.shoppingBagItemsList.visibility = View.VISIBLE
             binding.checkout.visibility = View.VISIBLE
+            binding.btnTime.visibility = View.VISIBLE
+            binding.txtTime.visibility = View.VISIBLE
 
             binding.shoppingBagItemsList.layoutManager = LinearLayoutManager(this)
             binding.shoppingBagItemsList.setHasFixedSize(true)
@@ -103,13 +132,6 @@ class ShoppingBagActivity : AppCompatActivity() {
                             val s2 = item.price.substring(index+1,item.price.length)
                             (s1 + s2).toInt()
                         }
-//                        item.price.contains(".") -> {
-//                            val index = item.price.indexOf(".")
-//                            val s1 = item.price.substring(0,index)
-//                            val s2 = item.price.substring(index+1,item.price.length)
-//
-//                            (s1 + s2).toInt()
-//                        }
                         else -> {
                             item.price.toInt()
                         }
@@ -119,13 +141,20 @@ class ShoppingBagActivity : AppCompatActivity() {
 
             }
             binding.total.text = "${subTotal}"
+            binding.delivery.text = "${100}"
 
             if (subTotal >0 ){
                 binding.btnCheckout.visibility = View.VISIBLE
 
-                total = subTotal.toInt()
+                total = (subTotal).toInt()
+                binding.totalDelivety.text = "${total + 100}"
 
                 binding.total.text = "${total}"
+
+//                var total = subTotal + 100
+//
+//                binding.totalDelivety.text = "${total}"
+
             }else{
                 binding.checkout.visibility = View.GONE
             }

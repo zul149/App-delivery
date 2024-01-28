@@ -32,7 +32,6 @@ class OrderFragment : Fragment() {
 
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,6 +56,7 @@ class OrderFragment : Fragment() {
                     super.onClick(position, product)
                     val intent = Intent(requireActivity(), MyDetailsOrderActivity::class.java)
                     intent.putExtra("product_id",product.title)
+                    intent.putExtra("order_details", product)
                     startActivity(intent)
                 }
             })

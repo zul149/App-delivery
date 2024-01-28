@@ -9,11 +9,11 @@ data class Order (
     var product_id : String = "",
     val items : ArrayList<CartItem> = ArrayList(),
     val address: address = address(),
-    val title : String = "",
     val price: Int = 0,
-    val img : String = "",
-    val sub_total : String = "",
     val order_dateTime : Long = 0L,
+    val time : Long = System.currentTimeMillis(),
+    val time_delivery : String = "",
+    val title : String = "",
     var id : String = ""
 ) : Parcelable
 

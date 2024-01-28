@@ -3,6 +3,7 @@ package com.example.sushi
 import android.app.Activity
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.sushi.data.CartItem
 import com.example.sushi.data.Item
@@ -14,6 +15,7 @@ import com.example.sushi.ui.order.OrderFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -96,7 +98,7 @@ class FB {
                     }
                     when (activity) {
                         is ShoppingBagActivity -> activity.successCartItemList(cartList)
-                        is MyDetailsOrderActivity -> activity.successCartItemsList(cartList)
+//                        is MyDetailsOrderActivity -> activity.successCartItemsList(cartList)
                     }
 
                 }
@@ -117,7 +119,7 @@ class FB {
                 }
                 when (activity) {
                     is ShoppingBagActivity -> activity.successProductList(productList)
-                    is MyDetailsOrderActivity -> activity.successProductList(productList)
+//                    is MyDetailsOrderActivity -> activity.successProductList(productList)
                 }
 
             }
@@ -218,6 +220,29 @@ class FB {
                 addressActivity.uploadSuccess()
 
             }
+    }
+
+    fun getOrder(addressActivity: MyDetailsOrderActivity, id: String) {
+        FirebaseFirestore.getInstance().collection("order").document(id)
+            .get()
+            .addOnSuccessListener {
+                val order = it.toObject(Order::class.java)
+                if(order != null) {
+                    addressActivity.getOrderSuccess(order)
+                }
+
+
+            }
+    }
+
+    fun placeOrder(activity: AddressActivity, orderDetails: Order) {
+        FirebaseFirestore.getInstance().collection("order")
+            .document()
+            .set(orderDetails, SetOptions.merge())
+            .addOnSuccessListener {
+
+            }
+
     }
 
 }

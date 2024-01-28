@@ -16,6 +16,7 @@ class MyAddressActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMyAddressBinding
     private var total = 0
     private var q = ""
+    private var timeDelivery = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +28,9 @@ class MyAddressActivity : AppCompatActivity() {
         }
         if (intent.hasExtra("x")){
             q = intent.getStringExtra("q").toString()
+        }
+        if (intent.hasExtra("timeDelivery")){
+            timeDelivery = intent.getStringExtra("timeDelivery").toString()
         }
 
         binding.addAddress.setOnClickListener {
@@ -72,6 +76,7 @@ class MyAddressActivity : AppCompatActivity() {
                         val intent = Intent(this@MyAddressActivity, AddressActivity::class.java)
                         address.total = total
                         intent.putExtra("address_details", address)
+                        intent.putExtra("timeDelivery", timeDelivery)
                         startActivity(intent)
                     }
                 }

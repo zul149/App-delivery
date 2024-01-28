@@ -25,6 +25,9 @@ class AddressActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddressBinding
     private var addressDetails : address? = null
     private var q = ""
+    private var timeDelivery = ""
+    private lateinit var orderDetails : Order
+    private lateinit var CartListItem: ArrayList<CartItem>
 //    private lateinit var CartListItem: ArrayList<CartItem>
 //    private var total = "0"
 
@@ -57,13 +60,11 @@ class AddressActivity : AppCompatActivity() {
             q = intent.getStringExtra("q").toString()
             binding.btnCheck.visibility = View.GONE
         }
-//        if (intent.hasExtra("cart_list_item")){ // принимаем занчения которые заполняют адрес из MyAddressActivity
-//            CartListItem = intent.getParcelableExtra("cart_list_item")!!
-//        }
 
-//        if (intent.hasExtra("total")){
-//            total = intent.getParcelableExtra("total")!!
-//        }
+        if (intent.hasExtra("timeDelivery")){
+            timeDelivery = intent.getStringExtra("timeDelivery")!!
+        }
+
 
         if(addressDetails != null){
             binding.addAddress.text = "Изменить адрес" //dинамисечкое изменение от ситуации
@@ -94,6 +95,7 @@ class AddressActivity : AppCompatActivity() {
                     .update(userHashMap)
                     .addOnSuccessListener {
                         val intent = Intent(this@AddressActivity,MyAddressActivity::class.java)
+                        intent.putExtra("address_details", addressDetails)
                         startActivity(intent)
                     }
             } else {
@@ -106,17 +108,28 @@ class AddressActivity : AppCompatActivity() {
         }
 
         binding.btnCheck.setOnClickListener{
-            val order = Order(price = addressDetails!!.total, title = System.currentTimeMillis().toString())
+            val x = addressDetails
+            val order = Order(
+                price  = addressDetails!!.total + 100,
+                title = System.currentTimeMillis().toString(),
+                address = addressDetails!!,
+                time_delivery = timeDelivery
+                )
             FB().uploadOrder(order, this)
+
         }
 
         setUpActionBar()
     }
 
+
+
+
     fun uploadSuccess() {
         val intent = Intent(this@AddressActivity, MenuActivity::class.java)
         startActivity(intent)
     }
+
 
     fun String.toEditable(): Editable =
         Editable.Factory.getInstance().newEditable(this) // помещаем значение в едит текст
@@ -233,6 +246,8 @@ class AddressActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK)
         finish()
     }
+
+
 
 
 }

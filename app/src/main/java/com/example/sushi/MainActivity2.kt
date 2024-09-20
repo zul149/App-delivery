@@ -21,20 +21,21 @@ class MainActivity2 : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.buttonAuth.setOnClickListener {
-            val email: String = binding.userEmailAuth.text.toString().trim()
-            val password: String = binding.userPassAuth.text.toString().trim()
-            if (email.isNotEmpty() && password.isNotEmpty()) {
-
+            val email: String? = binding.userEmailAuth?.text?.toString()?.trim()
+            val password: String? = binding.userPassAuth?.text?.toString()?.trim()
+            if (email.isNullOrEmpty() || password.isNullOrEmpty()) {
+                Toast.makeText(this, "не все поля заполнены", Toast.LENGTH_LONG).show()
+            } else {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             val toast = Toast.makeText(
-                                this,
+                                this@MainActivity2,
                                 "успешно",
                                 Toast.LENGTH_LONG
                             )
-                            if (toast.view != null) {
-                                toast.view!!.backgroundTintList =
+                            toast.view?.let {
+                                it.backgroundTintList =
                                     ColorStateList.valueOf(Color.rgb(0, 206, 209))
                                 toast.show()
                             }
@@ -43,18 +44,13 @@ class MainActivity2 : AppCompatActivity() {
                         } else {
                             Toast.makeText(
                                 this@MainActivity2,
-                                "нeуспешно" + task.exception!!.message,
+                                "нeуспешно: ${task.exception?.message}",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                    }.addOnFailureListener {
-                        Toast.makeText(
-                            this@MainActivity2,
-                            "нeуспешно" + it!!.message,
-                            Toast.LENGTH_LONG
-                        ).show()
                     }
             }
+
         }
         binding.linkToReg.setOnClickListener {  // переход
             val intent = Intent(this@MainActivity2, MainActivity::class.java)

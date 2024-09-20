@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -36,28 +37,29 @@ class MenuActivity : AppCompatActivity() {
         val header = drawerMenu.getHeaderView(0)
         val headerBinding = NavHeaderMainBinding.bind(header)
 
-        val id = FirebaseAuth.getInstance().currentUser!!.uid.toString()
+        val id = FirebaseAuth.getInstance().currentUser
 
-        FirebaseFirestore.getInstance().collection("users")
-            .document(id) //вызов функции получения айди юзера
-            .get()
-
-            .addOnSuccessListener { document ->
-                val user = document.toObject(users::class.java)
-                if ( user != null) {
-                    headerBinding.textViewName.text = user.name
-                    headerBinding.textViewPhone.text = user.phone
+        if (id != null) {
+            val id = id.uid
+            FirebaseFirestore.getInstance().collection("users")
+                .document(id)
+                .get()
+                .addOnSuccessListener { document ->
+                    val user = document.toObject(users::class.java)
+                    if (user != null) {
+                        headerBinding.textViewName.text = user.name
+                        headerBinding.textViewPhone.text = user.phone
+                    }
                 }
-            }
+        } else {
+            // Обработка случая, если пользователь не авторизован
+            Toast.makeText(this, "Пользователь не авторизован", Toast.LENGTH_LONG).show()
+            // Можешь, например, перекинуть его на экран авторизации
+            startActivity(Intent(this, MainActivity2::class.java))
+            finish() // Завершаем текущую активность
+        }
 
-//        binding.appBar.fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
-//
-//        binding.appBar.add.setOnClickListener { view ->
-//            startActivity(Intent(this, AddProducts::class.java))
-//        }
+
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -66,7 +68,7 @@ class MenuActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance().collection("users").document(FB().getCurrntUserId()).get()
             .addOnSuccessListener {
                 val user = it.toObject(users::class.java)
-                if(user!!.phone == "") {
+                if(user?.phone.isNullOrEmpty()) {
 //                    drawerLayout.visibility = View.VISIBLE
                     appBarConfiguration = AppBarConfiguration(
                         setOf(
@@ -85,13 +87,6 @@ class MenuActivity : AppCompatActivity() {
                     navView.setupWithNavController(navController)
                 }
             }
-//        appBarConfiguration = AppBarConfiguration(
-//            setOf(
-//                R.id.nav_home, R.id.nav_profile, R.id.nav_order
-//            ),drawerLayout
-//        )
-//        setupActionBarWithNavController(navController, appBarConfiguration)
-//        navView.setupWithNavController(navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -1,6 +1,6 @@
 package com.example.sushi.data
 
-data class productData(
+data class  productData(
     val img: String = "",
     val title: String = "",
     val price: String = "",

@@ -27,19 +27,17 @@
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
-        android:layout_marginTop="55dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:layout_marginTop="55dp"
+        android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/spisok"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
         </androidx.recyclerview.widget.RecyclerView>
 
